@@ -1,0 +1,26 @@
+{
+  "name": "sf-film-visualization",
+  "version": "1.0.0",
+  "description": "TBD",
+  "main": "./src/app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server",
+    "build": "webpack"
+  },
+  "author": "Rasmus Prentow",
+  "license": "ISC",
+  "dependencies": {
+    "d3-selection": "^1.0.2",
+    "ts-loader": "^0.9.1",
+    "types.d3": "^0.1.1"
+  },
+  "devDependencies": {
+    "css-loader": "^0.25.0",
+    "node-sass": "^3.10.1",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
+  }
+}
