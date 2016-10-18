@@ -2,6 +2,7 @@
 import {select} from 'd3-selection'
 import './styles.scss'
 import {Promise} from 'es6-promise';
+import {InMemoryFilmLocatioRepository} from './repositories/movie-location.repository';
 
 export class Visualizer {
 
@@ -14,6 +15,18 @@ export class Visualizer {
             
             resolve(a);
         }).then((b) => console.log(b))
+
+        var repo = new InMemoryFilmLocatioRepository();
+
+        repo.getGroups("test").then((data) => {
+            console.log(data)
+
+        }) 
+        
+        
+        
+
+
     }
 
 

@@ -4,26 +4,34 @@
   "description": "TBD",
   "main": "./src/app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "karma start",
     "start": "webpack-dev-server",
-    "build": "webpack"
+    "build": "webpack -p --config ./webpack.prod.config.js"
   },
   "author": "Rasmus Prentow",
   "license": "ISC",
   "dependencies": {
+    "@types/es6-promise": "0.0.32",
+    "@types/whatwg-fetch": "0.0.32",
     "d3-selection": "^1.0.2",
     "es6-promise": "^4.0.5",
     "soda-js": "^0.2.2",
     "ts-loader": "^0.9.1",
-    "types.d3": "^0.1.1"
+    "types.d3": "^0.1.1",
+    "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
     "@types/expect": "^1.13.30",
     "@types/mocha": "^2.2.32",
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
     "css-loader": "^0.25.0",
     "expect": "^1.20.2",
     "exports-loader": "^0.6.3",
     "imports-loader": "^0.6.5",
+    "json-loader": "^0.5.4",
     "karma": "^1.3.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-mocha": "^1.2.0",
@@ -35,5 +43,10 @@
     "style-loader": "^0.13.1",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
   }
 }
