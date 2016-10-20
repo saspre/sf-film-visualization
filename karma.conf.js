@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var webpackConfig = require('./webpack.config');
 
 module.exports = function (config) {
     config.set({
@@ -14,17 +15,12 @@ module.exports = function (config) {
         reporters: ['dots'], //report results in this format
         webpack: { //kind of a copy of your webpack config
             devtool: 'inline-source-map', //just do inline source maps instead of the default
-            module: {
-                loaders: [
-                    {
-                        test: /\.ts$/,
-                        loader: 'ts-loader'
-                    }
-                ]
-            }
+            module: webpackConfig.module,
+            resolve: webpackConfig.resolve
         },
         webpackServer: {
             noInfo: true //please don't spam the console when running in karma!
-        }
+        },
+    
     });
 };

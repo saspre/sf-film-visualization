@@ -5,6 +5,7 @@
   "main": "./src/app.ts",
   "scripts": {
     "test": "karma start",
+    "testwatch": "karma start --auto-watch --no-single-run",
     "start": "webpack-dev-server",
     "build": "webpack -p --config ./webpack.prod.config.js"
   },
