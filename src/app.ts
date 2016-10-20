@@ -3,12 +3,12 @@ import {select} from 'd3-selection'
 import './styles.scss'
 import {Promise} from 'es6-promise';
 import {InMemoryFilmLocatioRepository} from './repositories/movie-location.repository';
+import {Controller} from './visualizer'
 
-export class Visualizer {
+export class App {
 
     init(){
-        select("body").append("p").text("Test 2");
-
+    
         new Promise<string>(
             (resolve: (str: string)=>void, reject: (str: string)=>void) => {
             const a: string = "hello from Promise";
@@ -23,8 +23,9 @@ export class Visualizer {
 
         }) 
         
-        
-        
+      
+
+        new Controller().draw();
 
 
     }
@@ -32,6 +33,6 @@ export class Visualizer {
 
 }
 
-new Visualizer().init();
+new App().init();
 
 

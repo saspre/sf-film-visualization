@@ -1,8 +1,8 @@
 
 import *  as mocha from 'mocha'; 
-
 import * as _expect from 'expect';
-const expect = _expect as any as typeof _expect.default;
+const expect = _expect as any as typeof _expect.default; // Unfortunately needed
+
 
 describe('root', function () {
   it('renders without problems', function () {

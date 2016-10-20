@@ -13,8 +13,11 @@
   "dependencies": {
     "@types/es6-promise": "0.0.32",
     "@types/whatwg-fetch": "0.0.32",
+    "d3-interpolate": "^1.1.1",
     "d3-selection": "^1.0.2",
+    "d3-transition": "^1.0.2",
     "es6-promise": "^4.0.5",
+    "log4javascript": "^1.4.15",
     "soda-js": "^0.2.2",
     "ts-loader": "^0.9.1",
     "types.d3": "^0.1.1",

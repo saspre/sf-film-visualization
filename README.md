@@ -12,3 +12,12 @@ The following is a list of dependencies and why they are included:
 
  * ts-promise - Needed for promises as they are not natively supported by all browsers
  * SodaJs 
+
+
+
+
+
+ === Missing Stuff === 
+
+-Should use api token 
+-Should be responsive

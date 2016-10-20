@@ -1,5 +1,4 @@
 
-import * as soda from 'soda-js';
 import  'whatwg-fetch';
 
 
@@ -31,13 +30,21 @@ export interface IFilmLocationRepository {
  */
 export class InMemoryFilmLocatioRepository implements  IFilmLocationRepository {
 
-    getGroups(grouping): Promise<Array<IFilm>> {
-        
-        return fetch('https://data.sfgov.org/resource/wwmu-gmzc.json')
-            .then((response:any)  => {
+    private headers = new Headers();
 
+    getGroups(grouping): Promise<Array<IFilm>> {
+        var s: ReadableStream;
+       
+        return fetch('https://data.sfgov.org/resource/wwmu-gmzc.json?$group=title&$select=title')
+            .then((response:any)  => {
+               return response.json()
+        }).then((res) => {
+
+            console.log(res)
         });
         
     }
 }
+
+
 

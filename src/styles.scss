@@ -1,7 +1,44 @@
 
+// Animations TODO 
+@keyframes rotate {
+    from { transform: rotate(0, 60, 60);   }
+    to   { transform: rotate; }
+}
 
+// end animation
 
 p {
 
     color: blue;
+}
+
+
+visualizer svg {
+
+  //  background-color: grey;
+
+    circle {
+        fill: rgb(31, 119, 180);
+        fill-opacity: .25;
+        stroke: rgb(31, 119, 180);
+        stroke-width: 1px;
+    }
+
+    .fv-loader {
+   
+        circle {
+            fill-opacity: 0;
+            stroke: rgb(31, 119, 180);
+            stroke-width: 3px;
+        }
+
+        rect {
+        //    animation: rotate 2s linear 0s infinite;
+          fill: white;
+        }
+    }
+
+
+
+
 }
