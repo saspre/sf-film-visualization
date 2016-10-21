@@ -5,24 +5,55 @@
     to   { transform: rotate; }
 }
 
+@keyframes jitter {
+    from { transform: translate(0, 0)}
+    to { transform: translate(random(5px), random(5px))}
+}
+
+
 // end animation
 
 p {
 
-    color: blue;
+   
+  // todo make less general
 }
+
+
 
 
 visualizer svg {
 
   //  background-color: grey;
 
+  .node {
     circle {
         fill: rgb(31, 119, 180);
         fill-opacity: .25;
         stroke: rgb(31, 119, 180);
         stroke-width: 1px;
+        animation: jitter 2s linear 0s infinite alternate;
     }
+
+
+    text {
+        font-size: 8px;
+    }
+
+        div {
+            display: table;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        p {
+            font-size: 8px;
+            display:table-cell;
+            text-align: center;
+            vertical-align: middle;
+           
+        }
+  }
 
     .fv-loader {
    
@@ -36,9 +67,9 @@ visualizer svg {
         //    animation: rotate 2s linear 0s infinite;
           fill: white;
         }
+
     }
 
-
-
+   
 
 }

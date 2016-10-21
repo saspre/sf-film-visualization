@@ -1,8 +1,8 @@
 
-import {select} from 'd3-selection'
+
 import './styles.scss'
 import {Promise} from 'es6-promise';
-import {InMemoryFilmLocatioRepository} from './repositories/movie-location.repository';
+//import {InMemoryFilmLocatioRepository} from './repositories/movie-location.repository';
 import {Controller} from './visualizer'
 
 export class App {
@@ -16,12 +16,12 @@ export class App {
             resolve(a);
         }).then((b) => console.log(b))
 
-        var repo = new InMemoryFilmLocatioRepository();
+        // var repo = new InMemoryFilmLocatioRepository();
 
-        repo.getGroups("test").then((data) => {
-            console.log(data)
+        // repo.getGroups({ label: "title"}, { label: "location"}).then((data) => {
+        //     console.log(data)
 
-        }) 
+        // }) 
         
       
 
