@@ -6,7 +6,7 @@ import {StandardLoader, ILoader} from "./loader";
 
 import * as d3 from 'd3';
 
-describe('CircularLoader',  () => {
+describe('StandardLoader',  () => {
 
     let svg: d3.Selection<any>;
     let loader: ILoader;
@@ -21,7 +21,7 @@ describe('CircularLoader',  () => {
     describe('startLoading()', function () {
         it('Should add a loader to the svg', function () {
             loader.startLoader();
-            expect(svg.select("g").classed("fv-loader")).toBe(true);
+            expect(svg.select("g").classed("loader")).toBe(true);
         });
  
     })

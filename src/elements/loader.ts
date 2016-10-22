@@ -28,7 +28,7 @@ export class StandardLoader extends BaseElement implements ILoader {
             return; // We ignore call if already loading.
         }
         this.g = this.svg.append("g")
-            .classed("fv-loader", true);
+            .classed("loader", true);
 
         this.addCircle(this.g);
         this.addRect(this.g);

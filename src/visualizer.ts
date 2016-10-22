@@ -35,55 +35,75 @@ export class Visualizer {
         return window.innerWidth || document.body.clientWidth; //this.config.width;
     }
 
-    get cx(): number {
+    /** 
+     * Gets the center y-coordinate of the screen 
+     * */
+    private get cx(): number {
         return this.width / 2;
     }
 
-    get cy(): number {
+    /** 
+     * Gets the center y-coordinate of the screen 
+     * */
+    private get cy(): number {
         return this.height / 2;
     }
 
-   
 
     /** 
      * Draws the board and initialised related components.
-     * Draw is defined elsewhere as it ensures the class can be constructed prior.
-     * The downside to not having initization done in the constructor is that we rely on the caller to call to draw. 
-     *  */
-    public draw() {
+     * Draw is defined elsewhere as it ensures the class can be constructed prior to actually be shown.
+     * draw() should be called before setData to show loading while data is being fetched
+     * */
+     draw() {
       
    
-      this._svg = d3.select(this.targetId).append("svg")
-                .attr("width",  this.width)
-                .attr("height", this.height)
-              //  .attr("preserveAspectRatio", "xMinYMin meet")
-              //  .attr("viewBox", "0 0 600 400")
+        this._svg = d3.select(this.targetId).append("svg")
+                    .attr("width",  this.width)
+                    .attr("height", this.height)
+                //  .attr("preserveAspectRatio", "xMinYMin meet")
+                //  .attr("viewBox", "0 0 600 400")
 
-      this._loader = new StandardLoader(this._svg);
-      this.setIsLoading(true);
+        this._loader = new StandardLoader(this._svg);
+        this.setIsLoading(true);
 
-     const pack = d3.layout.pack()
-            .sort((a: any, b: any) => a["name"] - b["name"])
-            .size([this.width, this.height])
-            .padding(5);
+        const pack = d3.layout.pack()
+                .sort((a: any, b: any) => a["name"] - b["name"])
+                .size([this.width, this.height])
+                .padding(5);
 
-      this._nodeHierarchy = new NodeHierarchyElement(this._svg, pack);
+        const config = {
+            packLayout: pack,
+            minimumValue: 3
+        }
+
+        this._nodeHierarchy = new NodeHierarchyElement(this._svg, config);
 
     }
 
+    /**
+     * Sets data and shows it on the screen.
+     *  @param {boolean} isLoading
+     */
     setData(data: Array<IGroup>) {
-        var diameter = 960
- 
-        data = data.filter((d) => d.value > 2)
+        if(!this._nodeHierarchy) {
+            // If the _nodeHierarchy is not created draw has not been called
+            this.draw();
+        }
       
+ 
+
         this.setIsLoading(false);
-        this._nodeHierarchy.setData(data);
+        this._nodeHierarchy.data = data;
 
     }
 
   
-
-    public setIsLoading(isLoading: boolean){
+    /**
+     * Set whether or not a loader should be shown.
+     *  @param {boolean} isLoading
+     */
+    setIsLoading(isLoading: boolean){
         if(isLoading) {
             this._loader.startLoader();
         } else {

@@ -1,4 +1,4 @@
-[
+export const filmLocations = [
   {
     "COUNT_locations": "17",
     "title": "Americana"

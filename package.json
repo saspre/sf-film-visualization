@@ -13,9 +13,11 @@
   "license": "ISC",
   "dependencies": {
     "@types/d3": "^3.5.12",
+    "@types/loglevel": "^1.4.29",
     "@types/whatwg-fetch": "0.0.32",
     "d3": "^3.5.12",
     "log4javascript": "^1.4.15",
+    "loglevel": "^1.4.1",
     "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {

@@ -28,6 +28,12 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new webpack.SourceMapDevToolPlugin({
+      filename: null,
+      test: /\.(ts|js)($|\?)/i
+    })
+  ],
   debug: true
 }
 

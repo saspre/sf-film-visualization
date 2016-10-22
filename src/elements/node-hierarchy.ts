@@ -2,6 +2,10 @@ import * as d3 from 'd3';
 import { BaseElement } from './base-element';
 import { IGroup } from '../model';
 import { translateToBorderFactory, shortenToWithinRadius } from '../utils';
+import * as logManager from 'loglevel'
+
+let log = logManager.getLogger("node-hierarchy")
+
 
 /**
  * A combined interface for IGroup and d3.layout.pack.Node
@@ -12,6 +16,19 @@ export interface Node extends IGroup, d3.layout.pack.Node {
 
 }
 
+export class NodeHierarchyElementOption {
+
+    /**
+     * The layout pack to be used.
+     */
+    packLayout: d3.layout.Pack<Node>;
+
+    /**
+     * Defines the minimumValue to be drawn
+     */
+    minimumValue?: number;  
+}
+
 /**
  * The node Hierarchy represents a hierarchy of nodes. 
  * The depth of the hierarchy is always one. 
@@ -19,31 +36,65 @@ export interface Node extends IGroup, d3.layout.pack.Node {
 export class NodeHierarchyElement extends BaseElement {
 
     private _colorScheme: d3.scale.Ordinal<string, string>;
+    private _data: Array<IGroup>;
 
     constructor(
             svg: d3.Selection<any>, 
-            private packLayout: d3.layout.Pack<Node>) {
+            private _config: NodeHierarchyElementOption) {
         super (svg);
+
+        if(!this._config) {
+            log.error("No configuration is specified");
+            return;
+        }
+
+        if(!this._config.packLayout) {
+             log.error("No packlaout is specified");
+        }
     }
 
+    /** 
+     * The default colorscheme can be overriden
+    */
     public set colorScheme(value: d3.scale.Ordinal<string, string>) {
         this._colorScheme = value;
     }
 
+    public set minimumValue(value: number) {
+        this._config.minimumValue = value;
+    }
+
+    public get minimumValue() {
+        return this._config.minimumValue || 0;
+    }
+
+    
+
     public get colorScheme(): d3.scale.Ordinal<string, string> {
         if(!this._colorScheme) {
             this._colorScheme = d3.scale.category20b();
-        }
-        return this._colorScheme;
+         }
+         return this._colorScheme;
+ 
+
     }
 
-    public setData(data: Array<IGroup>) {
-         
+    /** 
+     * Sets data and starts drawing nodedes
+     *  */
+    public set data(data: Array<IGroup>) {
+        this._data = data;
+        this.redraw();
+    }
+
+    public redraw() {
         const translateNodeToBorder = translateToBorderFactory(this.cx, this.cy);
        
-        const layoutNodes = this.packLayout.nodes({children: data})
+        const data = this._data.filter((d) => d.value >= this.minimumValue && d.name)
+        
+        const layoutNodes = this._config.packLayout.nodes({children: data})
             .filter((d) =>  !d.children ) // Remove the root node as the hierarchical nature is removed. 
-       
+        
         const nodesSelection = this.svg
             .selectAll(".node") 
             .data(layoutNodes)

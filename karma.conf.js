@@ -16,7 +16,8 @@ module.exports = function (config) {
         webpack: { //kind of a copy of your webpack config
             devtool: 'inline-source-map', //just do inline source maps instead of the default
             module: webpackConfig.module,
-            resolve: webpackConfig.resolve
+            resolve: webpackConfig.resolve,
+            plugins: webpackConfig.plugins
         },
         webpackServer: {
             noInfo: true //please don't spam the console when running in karma!

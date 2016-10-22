@@ -4,6 +4,12 @@ import './styles.scss'
 
 //import {InMemoryFilmLocatioRepository} from './repositories/movie-location.repository';
 import {Controller} from './visualizer'
+import * as logManager from 'loglevel'
+ 
+let log = logManager.getLogger("app");
+
+log.setLevel("debug")
+
 
 export class App {
 
@@ -14,7 +20,7 @@ export class App {
             const a: string = "hello from Promise";
             
             resolve(a);
-        }).then((b) => console.log(b))
+        }).then((b) => log.info(b))
 
         // var repo = new InMemoryFilmLocatioRepository();
 

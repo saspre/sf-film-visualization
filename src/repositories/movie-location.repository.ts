@@ -1,6 +1,10 @@
 
 import  'whatwg-fetch';
 import { IGroup } from '../model'
+import * as logManager from 'loglevel'
+import { groupMapperFactory } from '../utils' 
+let log = logManager.getLogger("movie-location-repo");
+
 
 export interface IFilm {
     title: string;
@@ -13,7 +17,6 @@ export interface IFilm {
     writer: string;
     actors: Array<string>;
 }
-
 
 
 export interface ISelector {
@@ -40,18 +43,13 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
     private url = 'https://data.sfgov.org/resource/wwmu-gmzc.json'
    
     getGroups(primary: ISelector, secondary:ISelector): Promise<Array<IGroup>> {
-      
+         
+        // A mapper is created. It converts the result from the api to an array of IGroup
+        const mapper = groupMapperFactory(primary.label, "COUNT_" + secondary.label);
+
         return fetch(`${this.url}?$group=${primary.label}&$select=${primary.label},COUNT(${secondary.label})`)
             .then((response:any)  => response.json())
-            .then((json: any): Array<IGroup> => {
-                return json.map((elem:any) => { 
-                    console.log(elem)
-                    return { 
-                        name: elem[primary.label],
-                        value: +elem["COUNT_" + secondary.label]
-                    }
-                })
-            })
+            .then(mapper)
     }
 
     getSelectors(): Promise<Array<ISelector>> {
