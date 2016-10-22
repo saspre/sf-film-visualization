@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 module.exports = {  
-  entry: ['babel-polyfill','whatwg-fetch','./src/app.ts'],
+  entry: ['whatwg-fetch','./src/app.ts'],
   output: {
     filename: './dist/bundle.js'
   },
@@ -28,22 +28,6 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-       new webpack.ProvidePlugin({
-        
-        //    Promise: 'imports?this=>global!exports?global.Promise!es6-promise',
-           'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch' }) 
-   ],
-  debug: true,
-  node: {
-    fs: "empty",
-    net: 'empty',
-    module: "empty"
-  }
+  debug: true
 }
 
-
-//  new webpack.optimize.CommonsChunkPlugin('common.js'),
-  // new webpack.optimize.DedupePlugin(),
-  // new webpack.optimize.UglifyJsPlugin(),
-  // new webpack.optimize.AggressiveMergingPlugin()

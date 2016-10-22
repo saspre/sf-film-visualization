@@ -1,7 +1,7 @@
 
 
 import './styles.scss'
-import {Promise} from 'es6-promise';
+
 //import {InMemoryFilmLocatioRepository} from './repositories/movie-location.repository';
 import {Controller} from './visualizer'
 
