@@ -3,19 +3,21 @@
 import * as d3 from 'd3';
 
 
-export const translateToBorderFactory = (cx: number, cy: number): (g:d3.layout.pack.Node) => string => {
+export const translateToBorderFactory = (width: number, height: number): (g:d3.layout.pack.Node) => string => {
 
 
      return (d): string => {
 
+         let cx = width / 2;
+         let cy = height / 2;
         
-        // let xCenterDistance = (d.x - cx)
-        // let yCenterDistance = (d.y - cy)
+         let xCenterDistance = (d.x - cx)
+         let yCenterDistance = (d.y - cy)
 
-        // let closetsXBorder = xCenterDistance < 0? 0 : this.width;
-        // let closetsYBorder = yCenterDistance < 0? 0 : this.height;
-
-        return "translate(" + (d.x - cx) * 100 + "," + (d.y - cy) * 100 + ")";
+         let closetsXBorder = xCenterDistance < 0? 0 : width;
+         let closetsYBorder = yCenterDistance < 0? 0 : height;
+     
+        return "translate(" + d.x + "," + (height + d.r)  + ")";
 
      }
 } 

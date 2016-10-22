@@ -6,8 +6,7 @@ import { IGroup } from './model'
 import { NodeHierarchyElement, Node } from './elements'
 
 export interface IVisualizerConfig {
-    height: number;
-    width: number; 
+
     targetId?: string;
 }
 
@@ -121,7 +120,7 @@ export class Controller {
 
     constructor() {
         this._repository = new SodaFilmLocatioRepository();
-        this._visualizer = new Visualizer({ width: 800, height: 400 });
+        this._visualizer = new Visualizer({ });
     }
 
     draw() {

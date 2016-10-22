@@ -72,7 +72,7 @@ export class NodeHierarchyElement extends BaseElement {
 
     public get colorScheme(): d3.scale.Ordinal<string, string> {
         if(!this._colorScheme) {
-            this._colorScheme = d3.scale.category20b();
+            this._colorScheme = d3.scale.category20c();
          }
          return this._colorScheme;
  
@@ -88,10 +88,10 @@ export class NodeHierarchyElement extends BaseElement {
     }
 
     public redraw() {
-        const translateNodeToBorder = translateToBorderFactory(this.cx, this.cy);
+        const translateNodeToBorder = translateToBorderFactory(this.width, this.height);
        
         const data = this._data.filter((d) => d.value >= this.minimumValue && d.name)
-        
+     
         const layoutNodes = this._config.packLayout.nodes({children: data})
             .filter((d) =>  !d.children ) // Remove the root node as the hierarchical nature is removed. 
         
@@ -103,22 +103,83 @@ export class NodeHierarchyElement extends BaseElement {
             .attr("transform", translateNodeToBorder);
 
         this.addTitle(nodesSelection);
-        this.addLabel(nodesSelection);
+      
         this.addCircle(nodesSelection);
-        this.translateToCenter(nodesSelection);
-    
+        this.addLabel(nodesSelection);
+      
+        // let collide =  (alpha:any) =>{
+        //     var quadtree = d3.geom.quadtree(layoutNodes);
+        //     return (d: Node) => {
+        //         var r = d.r ,
+        //             nx1 = d.x - r,
+        //             nx2 = d.x + r,
+        //             ny1 = d.y - r,
+        //             ny2 = d.y + r;
+        //         quadtree.visit((quad, x1, y1, x2, y2)  => {
+        //         if (quad.point && (quad.point !== d)) {
+        //             var x = d.x - quad.point.x,
+        //                 y = d.y - quad.point.y,
+        //                 l = Math.sqrt(x * x + y * y),
+        //                 r = d.r + quad.point.r ;
+        //             if (l < r) {
+        //             l = (l - r) / l * alpha;
+        //             d.x -= x *= l;
+        //             d.y -= y *= l;
+        //             quad.point.x += x;
+        //             quad.point.y += y;
+        //             }
+        //         }
+        //         return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+        //         });
+        //     };
+        //     }
+
+        //  let tick = (e: any) => {
+        //         nodesSelection
+        //  //   .each(cluster(10 * e.alpha * e.alpha))
+        //  //   .each(collide(.1))
+        //     .attr("cx", (d)  =>{  return d.x = Math.max(50, Math.min(this.width - 50, d.x)); })
+        //     .attr("cy", (d) => { return d.y = Math.max(50, Math.min(this.height - 50, d.y)); });
+        // }
+
+        // var force = d3.layout.force()
+        // .nodes(layoutNodes)
+        // .size([this.width, this.height])
+        // .gravity(.1)
+        // .charge(0)
+        // .on("tick", tick)
+        // .start();
+
+       this.translateToCenter(nodesSelection);
     }
 
     private translateToCenter(nodesSelection: d3.Selection<Node>) {
+
+
         nodesSelection.transition()
-            .duration(3000)
-            .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-    }
+            .duration(2000)
+            .ease("cubic-in-out")
+            .delay((d, i) => i * 10)
+            .attr("transform", (d) => { 
+                var diffX = d.x - this.cx;
+                var diffY = d.y - this.cy;
+                d.x = d.x + diffX;
+                return "translate(" + (d.x) + "," + d.y + ")"; 
+            })
+            .transition()
+            .duration(1000)
+              .attr("transform", (d) => { 
+                d.x += (Math.random() - 0.5) * 3
+                d.y += (Math.random() - 0.5) * 3
+              return "translate(" + d.x + "," + d.y + ")"; 
+            })
+      }
 
     private addCircle(selection: d3.Selection<Node>) {
          selection.append("circle")
             .attr("r", (d) => d.r )
             .style("fill", (d) => this.colorScheme(d.name));
+        
     }
 
     private addTitle(selection: d3.Selection<Node>) {
