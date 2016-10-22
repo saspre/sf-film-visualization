@@ -1,5 +1,6 @@
 
 
+import '../fonts/Sansumi-Regular.scss'
 import './styles.scss'
 
 //import {InMemoryFilmLocatioRepository} from './repositories/movie-location.repository';

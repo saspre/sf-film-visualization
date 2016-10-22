@@ -19,11 +19,6 @@ export interface Node extends IGroup, d3.layout.pack.Node {
 export class NodeHierarchyElementOption {
 
     /**
-     * The layout pack to be used.
-     */
-    packLayout: d3.layout.Pack<Node>;
-
-    /**
      * Defines the minimumValue to be drawn
      */
     minimumValue?: number;  
@@ -46,10 +41,6 @@ export class NodeHierarchyElement extends BaseElement {
         if(!this._config) {
             log.error("No configuration is specified");
             return;
-        }
-
-        if(!this._config.packLayout) {
-             log.error("No packlaout is specified");
         }
     }
 
@@ -92,9 +83,16 @@ export class NodeHierarchyElement extends BaseElement {
        
         const data = this._data.filter((d) => d.value >= this.minimumValue && d.name)
      
-        const layoutNodes = this._config.packLayout.nodes({children: data})
+         const pack = d3.layout.pack()
+                .sort((a: any, b: any) => b["name"] - a["name"])
+                .size([this.width, this.height])
+                .padding(5);
+
+        const layoutNodes = pack.nodes({children: data})
             .filter((d) =>  !d.children ) // Remove the root node as the hierarchical nature is removed. 
         
+        
+
         const nodesSelection = this.svg
             .selectAll(".node") 
             .data(layoutNodes)
@@ -159,20 +157,13 @@ export class NodeHierarchyElement extends BaseElement {
         nodesSelection.transition()
             .duration(2000)
             .ease("cubic-in-out")
-            .delay((d, i) => i * 10)
+            .delay((d, i) => i * 20 * Math.random())
             .attr("transform", (d) => { 
                 var diffX = d.x - this.cx;
                 var diffY = d.y - this.cy;
                 d.x = d.x + diffX;
-                return "translate(" + (d.x) + "," + d.y + ")"; 
-            })
-            .transition()
-            .duration(1000)
-              .attr("transform", (d) => { 
-                d.x += (Math.random() - 0.5) * 3
-                d.y += (Math.random() - 0.5) * 3
-              return "translate(" + d.x + "," + d.y + ")"; 
-            })
+                return "translate(" + (d.x) + "," + (d.y) + ")"; 
+            });
       }
 
     private addCircle(selection: d3.Selection<Node>) {

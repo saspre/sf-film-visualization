@@ -66,13 +66,9 @@ export class Visualizer {
         this._loader = new StandardLoader(this._svg);
         this.setIsLoading(true);
 
-        const pack = d3.layout.pack()
-                .sort((a: any, b: any) => a["name"] - b["name"])
-                .size([this.width, this.height])
-                .padding(5);
-
+    
         const config = {
-            packLayout: pack,
+      
             minimumValue: 3
         }
 

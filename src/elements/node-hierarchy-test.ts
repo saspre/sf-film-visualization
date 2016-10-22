@@ -21,9 +21,9 @@ describe('NodeHierarchyElement',  () => {
             .attr("width",  500)
             .attr("height", 500)
 
-        let pack = d3.layout.pack();
+        
         nodes = new NodeHierarchyElement(svg, {
-            packLayout: pack
+          
         });
         let mapper = groupMapperFactory("title", "COUNT_locations")
         data = mapper(filmLocations);
