@@ -1,6 +1,9 @@
 
 import * as d3 from 'd3'
 import { BaseElement } from './base-element' 
+import * as logManager from 'loglevel'
+let log = logManager.getLogger("loader");
+
 
 export interface ILoader {
     startLoader(): void;
@@ -24,7 +27,7 @@ export class StandardLoader extends BaseElement implements ILoader {
 
     startLoader() {
         if(this.g) {
-            // todo: loging
+            log.debug("Calling already started loader")
             return; // We ignore call if already loading.
         }
         this.g = this.svg.append("g")
@@ -36,9 +39,10 @@ export class StandardLoader extends BaseElement implements ILoader {
     }
 
     stopLoader() {
-        if(this.g) 
-        
+        if(this.g)  {
             this.g.remove();
+            this.g = null;
+        }
     }
 
     /// Adds a circle to the selection. The circle is placed in the center of the board.

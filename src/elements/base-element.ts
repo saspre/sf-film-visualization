@@ -14,14 +14,11 @@ export class BaseElement {
     }
 
     get width(): number {
-     console.log(window.innerWidth || document.body.clientWidth, $("svg").width())
-        return +$("svg").width()
+        return +$(".visualizer").width()
     }
 
     get height(): number  {
-     console.log(window.innerHeight || document.body.clientHeight, $("svg").height())
-        
-        return +$("svg").height()
+        return +$(".visualizer").height()
     }
 
 }

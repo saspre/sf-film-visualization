@@ -74,8 +74,15 @@ export class NodeHierarchyElement extends BaseElement {
      * Sets data and starts drawing nodedes
      *  */
     public set data(data: Array<IGroup>) {
+        if(this._data) {
+            this.clean();
+        }
         this._data = data;
         this.redraw();
+    }
+
+    public clean() {
+        this.svg.selectAll(".node") .remove();
     }
 
     public redraw() {

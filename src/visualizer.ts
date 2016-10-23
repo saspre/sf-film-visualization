@@ -1,10 +1,12 @@
 import * as d3 from 'd3'
-import { ILoader, StandardLoader } from './elements';
-
-import { SodaFilmLocatioRepository } from './repositories/movie-location.repository'
-import { IGroup } from './model'
-import { NodeHierarchyElement, Node } from './elements'
 import * as $ from "jquery";
+import { ILoader, StandardLoader,NodeHierarchyElement, Node } from './elements';
+import { SodaFilmLocatioRepository } from './repositories'
+import { IGroup, ISelector, ISelectorManager } from './model'
+
+
+
+
 export interface IVisualizerConfig {
 
     targetId?: string;
@@ -13,43 +15,37 @@ export interface IVisualizerConfig {
 
 export class Visualizer {
 
+    private _repository: SodaFilmLocatioRepository;
     private _loader: ILoader; 
     private _svg: d3.Selection<any>;
     private _nodeHierarchy: NodeHierarchyElement;
 
-    constructor(private config: IVisualizerConfig) {}
+     constructor(private _manager: ISelectorManager, private config?: IVisualizerConfig) {
+        this._repository = new SodaFilmLocatioRepository();
       
+    }
+
+    private onSelectorChanged = (primary: ISelector, secondary: ISelector ) => {
+        if(this._nodeHierarchy) {
+            this._nodeHierarchy.clean();
+        }
+        this.setIsLoading(true);
+        this._repository.getGroups(primary, secondary)
+           
+            .then((groups) => {
+                  this.setData(groups);
+            });
+    }
+
+  
     get targetId() {
-        if(this.config.targetId) {
+        if(this.config && this.config.targetId) {
             return this.config.targetId;
         } 
-        return "visualizer";
+        return ".visualizer";
     }
 
-    get height () {
-        console.log(window.innerHeight || document.body.clientHeight)
-        return $("svg").height();//window.innerHeight || document.body.clientHeight;// this.config.height;
-    }
-
-    get width() {
-        return $("svg").width();; //this.config.width;
-    }
-
-    /** 
-     * Gets the center y-coordinate of the screen 
-     * */
-    private get cx(): number {
-        return this.width / 2;
-    }
-
-    /** 
-     * Gets the center y-coordinate of the screen 
-     * */
-    private get cy(): number {
-        return this.height / 2;
-    }
-
-
+    
     /** 
      * Draws the board and initialised related components.
      * Draw is defined elsewhere as it ensures the class can be constructed prior to actually be shown.
@@ -57,25 +53,30 @@ export class Visualizer {
      * */
      draw() {
       
+        this._repository.getSelectors().then((selectors) => {
+             this._manager.setPrimarySelectors(selectors, startPrimaryLabel);
+             this._manager.setSecondarySelectors(selectors, startSecondaryLabel);
+        })
+
+       
+       
         let target = d3.select(this.targetId);
 
         this._svg = target.append("svg")
-                  //  .attr("width",  target.size())
-                  //  .attr("height", target.style("height"))
-               //   .attr("preserveAspectRatio", "xMidYMin meet")
-                  .attr("viewBox", `0 0 ${$(this.targetId).parent().width()} ${$(this.targetId).parent().height()}`)
+              .attr("viewBox", `0 0 ${$(this.targetId).width()} ${$(this.targetId).height()}`)
 
         this._loader = new StandardLoader(this._svg);
         this.setIsLoading(true);
 
     
         const config = {
-      
             minimumValue: 3
         }
 
+         // Bootstrap with default data
+        this.onSelectorChanged({ query: startSecondaryLabel }, {query: startPrimaryLabel});
+        this._manager.setOnSelectorsCallback(this.onSelectorChanged);
         this._nodeHierarchy = new NodeHierarchyElement(this._svg, config);
-
     }
 
     /**
@@ -83,17 +84,17 @@ export class Visualizer {
      *  @param {boolean} isLoading
      */
     setData(data: Array<IGroup>) {
+       
         if(!this._nodeHierarchy) {
             // If the _nodeHierarchy is not created draw has not been called
             this.draw();
         }
-      
- 
-
         this.setIsLoading(false);
         this._nodeHierarchy.data = data;
 
     }
+
+
 
   
     /**
@@ -110,25 +111,6 @@ export class Visualizer {
 }
 
 
+export const startPrimaryLabel = "locations";
+export const startSecondaryLabel = "title";
 
-export class Controller {
-
-    private _visualizer: Visualizer
-    private _repository: SodaFilmLocatioRepository;
-
-    constructor() {
-        this._repository = new SodaFilmLocatioRepository();
-        this._visualizer = new Visualizer({ });
-    }
-
-    draw() {
-        this._visualizer.draw();
-
-        this._repository.getGroups({ query: "locations" }, {query: "title"})
-//        this._repository.getGroups({ label: "title" }, {label: "locations"})
-            .then((groups) => {
-                  this._visualizer.setData(groups);
-            });
-      
-    }
-}

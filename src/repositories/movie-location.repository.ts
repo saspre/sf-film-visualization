@@ -1,6 +1,6 @@
 
 import  'whatwg-fetch';
-import { IGroup } from '../model'
+import { IGroup, ISelector } from '../model'
 import * as logManager from 'loglevel'
 import { groupMapperFactory } from '../utils' 
 let log = logManager.getLogger("movie-location-repo");
@@ -19,10 +19,6 @@ export interface IFilm {
 }
 
 
-export interface ISelector {
-    label?: string; 
-    query: string;
-}
 
 /**
  * The IFilmLocationRepository is used to fetch the information 
@@ -85,7 +81,7 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
      * These are hardcoded for now, but should preferably be fetched from the API
      */
     getSelectors(): Promise<Array<ISelector>> {
-        return new Promise<Array<ISelector>>((reject, resolve) => {
+        return new Promise<Array<ISelector>>((resolve, reject) => {
             let data = [
                 {
                     label: "Title",
@@ -108,8 +104,8 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
                     query: "production_company"
                 }
             ]
-
-
+          
+            resolve(data);
         })
     }
 

@@ -1,10 +1,11 @@
 
 
-import '../fonts/Sansumi-Regular.scss'
+import './static/fonts/Sansumi-Regular.scss'
 import './styles.scss'
 
 //import {InMemoryFilmLocatioRepository} from './repositories/movie-location.repository';
-import {Controller} from './visualizer'
+import { Visualizer } from './visualizer'
+import { MenuComponent } from './components'
 import * as logManager from 'loglevel'
  
 let log = logManager.getLogger("app");
@@ -13,33 +14,21 @@ log.setLevel("debug")
 
 
 export class App {
+    private _visualizer: Visualizer;
+
+    constructor( ){
+        this._visualizer = new Visualizer(new MenuComponent());
+    }
 
     init(){
-    
-        new Promise<string>(
-            (resolve: (str: string)=>void, reject: (str: string)=>void) => {
-            const a: string = "hello from Promise";
-            
-            resolve(a);
-        }).then((b) => log.info(b))
-
-        // var repo = new InMemoryFilmLocatioRepository();
-
-        // repo.getGroups({ label: "title"}, { label: "location"}).then((data) => {
-        //     console.log(data)
-
-        // }) 
-        
-      
-
-        new Controller().draw();
-
-
+        this._visualizer.draw();
     }
 
 
 }
 
-new App().init();
+const app = new App();
+
+app.init();
 
 
