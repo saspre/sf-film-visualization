@@ -7,6 +7,7 @@ The bubble chart presentation is not the most precise way of representing size d
 The app allows an user to select a two selectors. The data (in this case movies and their location sets in SF) are then grouped by first the primary then the secondary selector. . 
 E.g. if the primary is **LocationMovie** and the secondary is **Movie**, each bubble shows a location. The size of the bubble represents the number of movies recorded at that location.
 
+[Demo](https://rasmusprentow.github.io/sf-film-visualization/)
 
 ## Code Structure 
 The app consists of several components that can exist by themselves. The primary is the Visualization component. 
