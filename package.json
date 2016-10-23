@@ -6,7 +6,7 @@
   "scripts": {
     "test": "karma start",
     "testwatch": "karma start --auto-watch --no-single-run",
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --hot",
     "build": "webpack -p --config ./webpack.prod.config.js"
   },
   "author": "Rasmus Prentow",

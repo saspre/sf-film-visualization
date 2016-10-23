@@ -1,11 +1,10 @@
-
-
-import './static/fonts/Sansumi-Regular.scss'
 import './styles.scss'
+import './static/fonts/Sansumi-Regular.scss'
 
 import { MenuComponent, Visualizer } from './components'
 import * as log from 'loglevel'
- 
+import * as $ from 'jquery'
+
 log.setLevel("debug")
 
 export class App {
@@ -16,6 +15,7 @@ export class App {
     }
 
     init(){
+        $('body').fadeIn("fast");
         this._visualizer.draw();
     }
 }
