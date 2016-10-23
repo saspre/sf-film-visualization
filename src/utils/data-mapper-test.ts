@@ -26,6 +26,20 @@ describe('IGroupMapperFactory',  () => {
         expect(func(data)[0].name).toBe("Americana");
     })
 
+    it('should handle empty array', function () {
+        let func = groupMapperFactory(titleLabel, valueLabel);
+
+        expect(func([]).length).toBe(0);
+   
+    })
+
+
+    it('should return null if input is null', function () {
+        let func = groupMapperFactory(titleLabel, valueLabel);
+
+        expect(func(null)).toBe(null); 
+   
+    })
     
 
     

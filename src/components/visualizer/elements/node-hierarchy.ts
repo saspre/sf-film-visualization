@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 import { BaseElement } from './base-element';
 import { IGroup } from '../../../model';
 import { translateToBorderFactory, shortenToWithinRadius } from '../../../utils';
+import { IVisualizerConfig } from '../visualizer-config'
+
 import * as logManager from 'loglevel'
 
 let log = logManager.getLogger("node-hierarchy")
@@ -16,15 +18,6 @@ export interface Node extends IGroup, d3.layout.pack.Node {
     radius?: number;
 }
 
-export class NodeHierarchyElementOption {
-
-    /**
-     * Defines the minimumValue to be drawn
-     */
-    minimumValue?: number;  
-    ignoreMinimumBelow?: number;
-}
-
 /**
  * The node Hierarchy represents a hierarchy of nodes. 
  * The depth of the hierarchy is always one. 
@@ -35,9 +28,10 @@ export class NodeHierarchyElement extends BaseElement {
     private _data: Array<IGroup>;
 
     constructor(
-            svg: d3.Selection<any>, 
-            private _config: NodeHierarchyElementOption) {
-        super (svg);
+            private _svg: d3.Selection<any>, 
+            config: IVisualizerConfig,
+           ) {
+        super(config);
 
         if(!this._config) {
             log.error("No configuration is specified");
@@ -45,32 +39,22 @@ export class NodeHierarchyElement extends BaseElement {
         }
     }
 
-    /** 
-     * The default colorscheme can be overriden
-    */
-    public set colorScheme(value: d3.scale.Ordinal<string, string>) {
-        this._colorScheme = value;
-    }
-
     public set minimumValue(value: number) {
         this._config.minimumValue = value;
     }
 
     public get minimumValue() {
-        return this._config.minimumValue || 0;
+        return this._config.minimumValue || 1; 
     }
-     public get ignoreMinimumBelow() {
+
+    public get ignoreMinimumBelow() {
         return this._config.ignoreMinimumBelow || 20;
     }
 
-    public get colorScheme(): d3.scale.Ordinal<string, string> {
-        if(!this._colorScheme) {
-            this._colorScheme = d3.scale.category20c();
-         }
-         return this._colorScheme;
- 
-
+    public set ignoreMinimumBelow(value) {
+         this._config.ignoreMinimumBelow = value;
     }
+   
 
     /** 
      * Sets data and starts drawing nodedes
@@ -85,27 +69,18 @@ export class NodeHierarchyElement extends BaseElement {
     }
 
     public clean() {
-        this.svg.selectAll(".node") .remove();
+        this._svg.selectAll(".node") .remove();
     }
 
     public redraw = () => {
         const translateNodeToBorder = translateToBorderFactory(this.width, this.height);
-       
-       
-        let minimumValue = this._data.length < this._config.ignoreMinimumBelow ? 0 : this._config.minimumValue;
+        
+        let minimumValue = this._data.length < this._config.ignoreMinimumBelow ? 1 : this._config.minimumValue;
         
         const data = this._data.filter((d) => d.value >= minimumValue && d.name)
           
         const pack = d3.layout.pack<Node>()
-                .sort((a,b)=> {
-                    return  - a.name.length - b.name.length
-                    // var threshold = 10;
-                    // if ((a.value > threshold) && (b.value > threshold)) {
-                    //     return (a.value - b.value);
-                    // } else {
-                    //     return 1;
-                    // }
-                })
+                .sort((a,b)=>  - a.name.length - b.name.length)
                 .size([this.width, this.height])
                 .padding(5);
 
@@ -115,7 +90,7 @@ export class NodeHierarchyElement extends BaseElement {
          layoutNodes.forEach((d) => d.radius = d.r);
         
 
-        const nodesSelection = this.svg
+        const nodesSelection = this._svg
             .selectAll(".node") 
             .data(layoutNodes)
             .enter().append("g")

@@ -15,7 +15,7 @@ export class App {
         this._visualizer = new Visualizer(
             new MenuComponent(),  
             new SodaFilmLocatioRepository(), 
-            { }); // We rely on the default configuration
+            { minimumValue: 2 }); 
     }
 
     init(){

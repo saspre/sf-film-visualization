@@ -1,6 +1,8 @@
 
 import * as d3 from 'd3'
 import { BaseElement } from './base-element' 
+import { IVisualizerConfig } from '../visualizer-config'
+
 import * as logManager from 'loglevel'
 let log = logManager.getLogger("loader");
 
@@ -19,8 +21,11 @@ export class StandardLoader extends BaseElement implements ILoader {
     private r = 50;
     private g: d3.Selection<any>;
 
-    constructor (svg: d3.Selection<any>) { 
-        super(svg);
+    constructor (
+            private _svg: d3.Selection<any>,   
+            config: IVisualizerConfig
+            ) { 
+        super(config);
     }
 
  
@@ -30,7 +35,7 @@ export class StandardLoader extends BaseElement implements ILoader {
             log.debug("Calling already started loader")
             return; // We ignore call if already loading.
         }
-        this.g = this.svg.append("g")
+        this.g = this._svg.append("g")
             .classed("loader", true);
 
         this.addCircle(this.g);

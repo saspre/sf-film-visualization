@@ -1,4 +1,5 @@
-
+import { ISelector, ISelectorHierarchy } from './selector'
+import { IGroup } from './group'
 
 /**
  * The IFilmLocationRepository is used to fetch the information 
@@ -7,5 +8,5 @@
 export interface IGroupRepository {
 
     getGroups(primary: ISelector, secondary: ISelector): Promise<Array<IGroup>>;
-    getSelectors(): Promise<Array<ISelector>>;
+    getSelectors(): Promise<Array<ISelectorHierarchy>>;
 }

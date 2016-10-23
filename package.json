@@ -13,7 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "@types/d3": "^3.5.12",
-    "@types/handlebars": "^4.0.31",
     "@types/jquery": "^2.0.33",
     "@types/loglevel": "^1.4.29",
     "@types/whatwg-fetch": "0.0.32",
@@ -26,6 +25,7 @@
   "devDependencies": {
     "@types/expect": "^1.13.30",
     "@types/mocha": "^2.2.32",
+    "@types/handlebars": "^4.0.31",
     "clean-webpack-plugin": "^0.1.13",
     "copy-webpack-plugin": "^3.0.1",
     "css-loader": "^0.25.0",

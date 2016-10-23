@@ -31,14 +31,18 @@ describe('NodeHierarchyElement',  () => {
  
     describe('set data()', function () {
         it('should add circles to the svg', function () {
+            
+            nodes.ignoreMinimumBelow = 500;
+            nodes.minimumValue = 0 
             nodes.data = data;
-            expect(svg.selectAll(".node").size()).toBe(273);
+            expect(svg.selectAll(".node").size()).toBe(220);
         });
     })
-
+ 
      describe('set minimumValue()', function () {
         it('should add fewer circles once minimum is set', function () {
             nodes.minimumValue = 5   
+            nodes.ignoreMinimumBelow = 1;
             nodes.data = data;
             expect(svg.selectAll(".node").size()).toBe(77);
         }); 
