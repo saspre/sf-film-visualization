@@ -6,20 +6,6 @@ import { groupMapperFactory } from '../utils'
 let log = logManager.getLogger("movie-location-repo");
 import * as $ from 'jquery'
 
-export interface IFilm {
-    title: string;
-    releaseYear: string;
-    locations: string;
-    funFacts: string;
-    productionCompany: string; 
-    distributer: string;
-    director: string; 
-    writer: string;
-    actors: Array<string>;
-}
-
-
-
 /**
  * The IFilmLocationRepository is used to fetch the information 
  * The idea is to create an abstraction between the data, as it can have several origins
@@ -82,7 +68,7 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
      */
     getSelectors(): Promise<Array<ISelectorHierarchy>> {
         const titleSelector = {
-                    label: "Title",
+                    label: "Movie",
                     query: "title"
                 };
         const locationsSelector = {
@@ -110,9 +96,7 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
                 $.extend(writerSelector,    { children: [ titleSelector, locationsSelector, directorSelector, productionCompany  ]}),
                 $.extend(directorSelector,  { children: [ titleSelector, locationsSelector, writerSelector, productionCompany  ]}),
                 $.extend(productionCompany, { children: [ titleSelector, locationsSelector, writerSelector, directorSelector  ]}),
-
             ]
-          
             resolve(data);
         })
     }

@@ -1,8 +1,29 @@
 
 
 .menu {
-    background-color: $uber-black;
-    color: $raw-white;
-   //flex: 1;
-    flex: 0 0 12em;
+    background-color: white;
+    color: $uber-black;
+ 
+    flex: 0 0 16em;
+    border-right: 1px solid $uber-black;;
+        padding-top: 50px;
+
+    img, h2, input, div {
+        padding-left: 48px;
+    }
+    img {
+        display: inline;
+    }
+    h1 {
+        display: inline;
+        line-height: 0;
+    }
+    hr {
+        color: $uber-black;
+        width: 80%;
+        margin-bottom: 20px
+    }
+    input {
+        margin: 5px 0;
+    }
 }

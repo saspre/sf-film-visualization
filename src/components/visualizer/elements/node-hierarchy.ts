@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { BaseElement } from './base-element';
-import { IGroup } from '../model';
-import { translateToBorderFactory, shortenToWithinRadius } from '../utils';
+import { IGroup } from '../../../model';
+import { translateToBorderFactory, shortenToWithinRadius } from '../../../utils';
 import * as logManager from 'loglevel'
 
 let log = logManager.getLogger("node-hierarchy")
@@ -59,8 +59,6 @@ export class NodeHierarchyElement extends BaseElement {
         return this._config.minimumValue || 0;
     }
 
-    
-
     public get colorScheme(): d3.scale.Ordinal<string, string> {
         if(!this._colorScheme) {
             this._colorScheme = d3.scale.category20c();
@@ -93,12 +91,13 @@ export class NodeHierarchyElement extends BaseElement {
 
          const pack = d3.layout.pack<Node>()
                 .sort((a,b)=> {
-                    var threshold = 10;
-                    if ((a.value > threshold) && (b.value > threshold)) {
-                        return (a.value - b.value);
-                    } else {
-                        return 1;
-                    }
+                    return  - a.name.length - b.name.length
+                    // var threshold = 10;
+                    // if ((a.value > threshold) && (b.value > threshold)) {
+                    //     return (a.value - b.value);
+                    // } else {
+                    //     return 1;
+                    // }
                 })
                 .size([this.width, this.height])
                 .padding(5);
@@ -114,8 +113,6 @@ export class NodeHierarchyElement extends BaseElement {
             .data(layoutNodes)
             .enter().append("g")
             .attr("class", "node")
-           //.attr("transform", (d) => "translate(" + d.x + ", " + d.y + ")")
-      
             .attr("transform", translateNodeToBorder);
 
         this.addTitle(nodesSelection);
@@ -123,70 +120,8 @@ export class NodeHierarchyElement extends BaseElement {
         this.addCircle(nodesSelection);
         this.addLabel(nodesSelection);
       
-        
-
-  //     this.translateToCenter(nodesSelection);
-
-      function collide(node: Node) {
-          
-        var r = node.radius + 16,
-            nx1 = node.x - r,
-            nx2 = node.x + r,
-            ny1 = node.y - r,
-            ny2 = node.y + r;
-        return (quad: d3.geom.quadtree.Node<Node>, x1:number, y1:number, x2:number, y2:number): boolean => {
-          
-                if (quad.point && (quad.point !== node)) {
-                var x = node.x - quad.point.x,
-                    y = node.y - quad.point.y,
-                    l = Math.sqrt(x * x + y * y),
-                    r = node.radius + quad.point.radius + 10;
-                if (l < r) {
-                    l = (l - r) / l * .5;
-                    node.x -= x *= l;
-                    node.y -= y *= l;
-                    quad.point.x += x;
-                    quad.point.y += y;
-                }
-                }
-                return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-            };
-        }
-         let tick = (e: any) => {
-            var q = d3.geom.quadtree(layoutNodes),
-                i = 0,
-                n = layoutNodes.length;
-
-            while (++i < n) q.visit(collide(layoutNodes[i]));
-                nodesSelection
-                .attr("transform", (d) => { 
-               
-                return `translate(${d.x}, ${d.y})`
-            });
-        }
-
-        var force = d3.layout.force()
-        .nodes(layoutNodes)
-        .size([this.width, this.height])
-        .gravity(.1)
-        .charge(0)
-        .on("tick", tick)
-      //  .start();
-
-       // this.transitionToR();
-       this.translateToCenter(nodesSelection);
+        this.translateToCenter(nodesSelection);
     }
-
-    private transitionToR() {
-
-
-        this.svg.selectAll("circle").transition()
-            .duration(2000)
-            .ease("cubic-in-out")
-            .delay((d, i) => i * 20 * Math.random())
-            .attr("r", (d) => d.r)
-         ;
-      }
 
 
     private translateToCenter(nodesSelection: d3.Selection<Node>) {
@@ -197,18 +132,14 @@ export class NodeHierarchyElement extends BaseElement {
             .ease("cubic-in-out")
             .delay((d, i) => i * 20 * Math.random())
             .attr("transform", (d) => { 
-                var diffX = d.x - this.cx;
-                var diffY = d.y - this.cy;
-               // d.x = d.x + diffX;
-                return "translate(" + (d.x) + "," + (d.y) + ")"; 
+                return `translate(${d.x}, ${d.y})`; 
             });
       }
 
     private addCircle(selection: d3.Selection<Node>) {
          selection.append("circle")
-           // .attr("r", 0)
             .attr("r", (d) => d.r )
-            .style("fill", (d) => this.colorScheme(d.name));
+            .attr("class", (d,i ) => "node-color-" + ((i % 6 )+ 1));
         
     }
 

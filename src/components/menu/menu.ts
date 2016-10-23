@@ -46,7 +46,7 @@ export class MenuComponent implements ISelectorManager {
             let selectedString = selected === selector.query ? "checked" : "";
             const html = `
                 <input type="radio" name="${category}" id="${category}-${i}" value="${selector.query}" ${selectedString} />
-                <label for="${category}-${i}">${selector.label}<label><br>
+                <label for="${category}-${i}">${selector.label}</label><br>
             `
             $(categoryClass).append(html)
         });

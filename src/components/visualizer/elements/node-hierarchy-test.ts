@@ -6,9 +6,9 @@ const expect = _expect as any as typeof _expect.default; // Unfortunately needed
 import * as d3 from "d3";
 
 import { NodeHierarchyElement } from "./index";
-import { filmLocations } from "../../data/test-data";
-import { groupMapperFactory } from '../utils'
-import { IGroup } from '../model'
+import { filmLocations } from "../../../../data/test-data";
+import { groupMapperFactory } from '../../../utils'
+import { IGroup } from '../../../model'
 
 describe('NodeHierarchyElement',  () => {
 

@@ -1,10 +1,8 @@
 import * as d3 from 'd3'
 import * as $ from "jquery";
-import { ILoader, StandardLoader,NodeHierarchyElement, Node } from './elements';
-import { SodaFilmLocatioRepository } from './repositories'
-import { IGroup, ISelector, ISelectorManager } from './model'
-
-
+import { ILoader, StandardLoader,NodeHierarchyElement, Node, NodeHierarchyElementOption } from './elements';
+import { SodaFilmLocatioRepository } from '../../repositories'
+import { IGroup, ISelector, ISelectorManager } from '../../model'
 
 
 export interface IVisualizerConfig {
@@ -22,7 +20,6 @@ export class Visualizer {
 
      constructor(private _manager: ISelectorManager, private config?: IVisualizerConfig) {
         this._repository = new SodaFilmLocatioRepository();
-      
     }
 
     private onSelectorChanged = (primary: ISelector, secondary: ISelector ) => {
@@ -31,7 +28,6 @@ export class Visualizer {
         }
         this.setIsLoading(true);
         this._repository.getGroups(primary, secondary)
-           
             .then((groups) => {
                   this.setData(groups);
             });
@@ -54,10 +50,12 @@ export class Visualizer {
      draw() {
       
         this._repository.getSelectors().then((selectors) => {
+             if(!selectors || selectors.length == 0) {
+                 log.error("No selectors found")
+             }
+             this.onSelectorChanged({ query: selectors[0].query }, {query:  selectors[0].children[0].query});
              this._manager.setSelectors(selectors);
         })
-
-       
        
         let target = d3.select(this.targetId);
 
@@ -68,12 +66,12 @@ export class Visualizer {
         this.setIsLoading(true);
 
     
-        const config = {
-            minimumValue: 3
+        const config: NodeHierarchyElementOption  = {
+            minimumValue: 2  
         }
 
          // Bootstrap with default data
-        this.onSelectorChanged({ query: startSecondaryLabel }, {query: startPrimaryLabel});
+     
         this._manager.setOnSelectorsCallback(this.onSelectorChanged);
         this._nodeHierarchy = new NodeHierarchyElement(this._svg, config);
     }
@@ -92,9 +90,6 @@ export class Visualizer {
         this._nodeHierarchy.data = data;
 
     }
-
-
-
   
     /**
      * Set whether or not a loader should be shown.
@@ -108,8 +103,4 @@ export class Visualizer {
         }
     }
 }
-
-
-export const startPrimaryLabel = "locations";
-export const startSecondaryLabel = "title";
 
