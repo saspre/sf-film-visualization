@@ -4,7 +4,7 @@
     circle {
         stroke: $light-blue;
         stroke-width: 2px;
- 
+        
     }
 
     $colors: #6E868D #56717A #3E5D67 #264954 #0E3541;
@@ -16,16 +16,13 @@
         }
     }
 
-
-
-   
-
     div {
         display: table;
         height: 100%;
         width: 100%;
         overflow: hidden;
     }
+    
     p {
         font-size: 8px;
         color: $raw-white;

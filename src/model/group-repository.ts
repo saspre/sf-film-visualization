@@ -2,7 +2,7 @@ import { ISelector, ISelectorHierarchy } from './selector'
 import { IGroup } from './group'
 
 /**
- * The IFilmLocationRepository is used to fetch the information 
+ * The IGroupRepository is used to fetch groups 
  * The idea is to create an abstraction between the data, as it can have several origins
  *  */
 export interface IGroupRepository {

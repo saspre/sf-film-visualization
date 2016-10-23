@@ -8,6 +8,10 @@ import * as $ from 'jquery'
 
 log.setLevel("debug")
 
+/**
+ * Main application. 
+ * This class bootstraps the entire app.
+ */
 export class App {
     private _visualizer: Visualizer;
 
@@ -19,6 +23,7 @@ export class App {
     }
 
     init(){
+        // Litte fix to make start look better
         $('body').fadeIn("fast");
         this._visualizer.initalize();
     }

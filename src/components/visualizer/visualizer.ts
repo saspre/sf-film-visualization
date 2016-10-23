@@ -25,8 +25,6 @@ export class Visualizer extends BaseElement {
     *  @param {boolean} isLoading
     */
     set data(data: Array<IGroup>) {
-
-        
         if (!this._nodeHierarchy) {
             // If the _nodeHierarchy is not created draw has not been called
             this.initalize();
@@ -74,7 +72,9 @@ export class Visualizer extends BaseElement {
     }
 
 
-
+    /**
+     * Callback method activated when a user selects a new Selector. 
+     */
     private onSelectorChanged = (primary: ISelector, secondary: ISelector) => {
         if (this._nodeHierarchy) {
             this._nodeHierarchy.clean();
@@ -93,6 +93,9 @@ export class Visualizer extends BaseElement {
             })
     }
 
+    /**
+     * Displays an error when data can not be fetched. e.g. bad connection
+     */
     private showError() {
         this._svg.append("text")
             .attr("x", +$(this.targetId).width() /2)
