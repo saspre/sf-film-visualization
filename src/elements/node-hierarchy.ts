@@ -13,7 +13,7 @@ let log = logManager.getLogger("node-hierarchy")
  * d3 properties (r, x, y...) while keeping the original properties (name, value)
  */
 export interface Node extends IGroup, d3.layout.pack.Node {
-
+    radius?: number;
 }
 
 export class NodeHierarchyElementOption {
@@ -82,15 +82,24 @@ export class NodeHierarchyElement extends BaseElement {
         const translateNodeToBorder = translateToBorderFactory(this.width, this.height);
        
         const data = this._data.filter((d) => d.value >= this.minimumValue && d.name)
-     
-         const pack = d3.layout.pack()
-                .sort((a: any, b: any) => b["name"] - a["name"])
+        
+
+         const pack = d3.layout.pack<Node>()
+                .sort((a,b)=> {
+                    var threshold = 10;
+                    if ((a.value > threshold) && (b.value > threshold)) {
+                        return (a.value - b.value);
+                    } else {
+                        return 1;
+                    }
+                })
                 .size([this.width, this.height])
                 .padding(5);
 
-        const layoutNodes = pack.nodes({children: data})
+        let layoutNodes = pack.nodes({children: data})
             .filter((d) =>  !d.children ) // Remove the root node as the hierarchical nature is removed. 
         
+         layoutNodes.forEach((d) => d.radius = d.r);
         
 
         const nodesSelection = this.svg
@@ -98,6 +107,8 @@ export class NodeHierarchyElement extends BaseElement {
             .data(layoutNodes)
             .enter().append("g")
             .attr("class", "node")
+           //.attr("transform", (d) => "translate(" + d.x + ", " + d.y + ")")
+      
             .attr("transform", translateNodeToBorder);
 
         this.addTitle(nodesSelection);
@@ -105,51 +116,71 @@ export class NodeHierarchyElement extends BaseElement {
         this.addCircle(nodesSelection);
         this.addLabel(nodesSelection);
       
-        // let collide =  (alpha:any) =>{
-        //     var quadtree = d3.geom.quadtree(layoutNodes);
-        //     return (d: Node) => {
-        //         var r = d.r ,
-        //             nx1 = d.x - r,
-        //             nx2 = d.x + r,
-        //             ny1 = d.y - r,
-        //             ny2 = d.y + r;
-        //         quadtree.visit((quad, x1, y1, x2, y2)  => {
-        //         if (quad.point && (quad.point !== d)) {
-        //             var x = d.x - quad.point.x,
-        //                 y = d.y - quad.point.y,
-        //                 l = Math.sqrt(x * x + y * y),
-        //                 r = d.r + quad.point.r ;
-        //             if (l < r) {
-        //             l = (l - r) / l * alpha;
-        //             d.x -= x *= l;
-        //             d.y -= y *= l;
-        //             quad.point.x += x;
-        //             quad.point.y += y;
-        //             }
-        //         }
-        //         return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-        //         });
-        //     };
-        //     }
+        
 
-        //  let tick = (e: any) => {
-        //         nodesSelection
-        //  //   .each(cluster(10 * e.alpha * e.alpha))
-        //  //   .each(collide(.1))
-        //     .attr("cx", (d)  =>{  return d.x = Math.max(50, Math.min(this.width - 50, d.x)); })
-        //     .attr("cy", (d) => { return d.y = Math.max(50, Math.min(this.height - 50, d.y)); });
-        // }
+  //     this.translateToCenter(nodesSelection);
 
-        // var force = d3.layout.force()
-        // .nodes(layoutNodes)
-        // .size([this.width, this.height])
-        // .gravity(.1)
-        // .charge(0)
-        // .on("tick", tick)
-        // .start();
+      function collide(node: Node) {
+          
+        var r = node.radius + 16,
+            nx1 = node.x - r,
+            nx2 = node.x + r,
+            ny1 = node.y - r,
+            ny2 = node.y + r;
+        return (quad: d3.geom.quadtree.Node<Node>, x1:number, y1:number, x2:number, y2:number): boolean => {
+          
+                if (quad.point && (quad.point !== node)) {
+                var x = node.x - quad.point.x,
+                    y = node.y - quad.point.y,
+                    l = Math.sqrt(x * x + y * y),
+                    r = node.radius + quad.point.radius + 10;
+                if (l < r) {
+                    l = (l - r) / l * .5;
+                    node.x -= x *= l;
+                    node.y -= y *= l;
+                    quad.point.x += x;
+                    quad.point.y += y;
+                }
+                }
+                return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+            };
+        }
+         let tick = (e: any) => {
+            var q = d3.geom.quadtree(layoutNodes),
+                i = 0,
+                n = layoutNodes.length;
 
+            while (++i < n) q.visit(collide(layoutNodes[i]));
+                nodesSelection
+                .attr("transform", (d) => { 
+               
+                return `translate(${d.x}, ${d.y})`
+            });
+        }
+
+        var force = d3.layout.force()
+        .nodes(layoutNodes)
+        .size([this.width, this.height])
+        .gravity(.1)
+        .charge(0)
+        .on("tick", tick)
+      //  .start();
+
+       // this.transitionToR();
        this.translateToCenter(nodesSelection);
     }
+
+    private transitionToR() {
+
+
+        this.svg.selectAll("circle").transition()
+            .duration(2000)
+            .ease("cubic-in-out")
+            .delay((d, i) => i * 20 * Math.random())
+            .attr("r", (d) => d.r)
+         ;
+      }
+
 
     private translateToCenter(nodesSelection: d3.Selection<Node>) {
 
@@ -161,13 +192,14 @@ export class NodeHierarchyElement extends BaseElement {
             .attr("transform", (d) => { 
                 var diffX = d.x - this.cx;
                 var diffY = d.y - this.cy;
-                d.x = d.x + diffX;
+               // d.x = d.x + diffX;
                 return "translate(" + (d.x) + "," + (d.y) + ")"; 
             });
       }
 
     private addCircle(selection: d3.Selection<Node>) {
          selection.append("circle")
+           // .attr("r", 0)
             .attr("r", (d) => d.r )
             .style("fill", (d) => this.colorScheme(d.name));
         

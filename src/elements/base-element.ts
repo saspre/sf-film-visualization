@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-
+import * as $ from "jquery";
 
 export class BaseElement {
 
@@ -14,11 +14,14 @@ export class BaseElement {
     }
 
     get width(): number {
-        return +this.svg.attr("width")
+     console.log(window.innerWidth || document.body.clientWidth, $("svg").width())
+        return +$("svg").width()
     }
 
     get height(): number  {
-        return +this.svg.attr("height")
+     console.log(window.innerHeight || document.body.clientHeight, $("svg").height())
+        
+        return +$("svg").height()
     }
 
 }

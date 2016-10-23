@@ -4,7 +4,7 @@ import { ILoader, StandardLoader } from './elements';
 import { SodaFilmLocatioRepository } from './repositories/movie-location.repository'
 import { IGroup } from './model'
 import { NodeHierarchyElement, Node } from './elements'
-
+import * as $ from "jquery";
 export interface IVisualizerConfig {
 
     targetId?: string;
@@ -27,11 +27,12 @@ export class Visualizer {
     }
 
     get height () {
-        return window.innerHeight || document.body.clientHeight;// this.config.height;
+        console.log(window.innerHeight || document.body.clientHeight)
+        return $("svg").height();//window.innerHeight || document.body.clientHeight;// this.config.height;
     }
 
     get width() {
-        return window.innerWidth || document.body.clientWidth; //this.config.width;
+        return $("svg").width();; //this.config.width;
     }
 
     /** 
@@ -56,12 +57,13 @@ export class Visualizer {
      * */
      draw() {
       
-   
-        this._svg = d3.select(this.targetId).append("svg")
-                    .attr("width",  this.width)
-                    .attr("height", this.height)
-                //  .attr("preserveAspectRatio", "xMinYMin meet")
-                //  .attr("viewBox", "0 0 600 400")
+        let target = d3.select(this.targetId);
+
+        this._svg = target.append("svg")
+                  //  .attr("width",  target.size())
+                  //  .attr("height", target.style("height"))
+               //   .attr("preserveAspectRatio", "xMidYMin meet")
+                  .attr("viewBox", `0 0 ${$(this.targetId).parent().width()} ${$(this.targetId).parent().height()}`)
 
         this._loader = new StandardLoader(this._svg);
         this.setIsLoading(true);
@@ -122,7 +124,7 @@ export class Controller {
     draw() {
         this._visualizer.draw();
 
-        this._repository.getGroups({ label: "locations" }, {label: "title"})
+        this._repository.getGroups({ query: "locations" }, {query: "title"})
 //        this._repository.getGroups({ label: "title" }, {label: "locations"})
             .then((groups) => {
                   this._visualizer.setData(groups);

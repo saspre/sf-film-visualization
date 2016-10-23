@@ -20,7 +20,8 @@ export interface IFilm {
 
 
 export interface ISelector {
-    label: string; 
+    label?: string; 
+    query: string;
 }
 
 /**
@@ -44,16 +45,72 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
    
     getGroups(primary: ISelector, secondary:ISelector): Promise<Array<IGroup>> {
          
-        // A mapper is created. It converts the result from the api to an array of IGroup
-        const mapper = groupMapperFactory(primary.label, "COUNT_" + secondary.label);
 
-        return fetch(`${this.url}?$group=${primary.label}&$select=${primary.label},COUNT(${secondary.label})`)
-            .then((response:any)  => response.json())
+        // A mapper is created. It converts the result from the api to an array of IGroup
+        const mapper = groupMapperFactory(primary.query, "COUNT_" + secondary.query);
+
+        // If neither selector is the location we need a more advanced query as we would other wise get 
+        // very misleading results (or simply plain wrong results)
+        // e.g. if primary = production_company and secondary = writer it will show the number of locations 
+        // that production company has used that writer not based on number of films 
+        if(primary.query !== "locations" && secondary.query !== "locations") 
+        {
+           // return this.getAvancedGroups(primary, secondary, mapper);
+        }
+
+        return this.fetch(`${this.url}?$group=${primary.query}&$select=${primary.query},COUNT(${secondary.query})`)           
             .then(mapper)
     }
 
+    
+    private getAvancedGroups(primary: ISelector, secondary:ISelector, mapper: (d: any)=> Array<IGroup>): Promise<Array<IGroup>>  {
+
+        let query = `SELECT ${primary.query}, count(*) 
+                     GROUP BY ${secondary.query}, ${primary.query} |>
+                            SELECT ${primary.query}, COUNT(*) AS count 
+                            GROUP BY ${primary.query}`
+        
+
+        return this.fetch(`${this.url}?$query${query}`)
+            .then(mapper);
+    }
+
+    private fetch(query: string): Promise<any> {
+        return fetch(query)
+            .then((response:any)  => response.json())
+    }
+
+    /**
+     * Gets the possible selectors. 
+     * These are hardcoded for now, but should preferably be fetched from the API
+     */
     getSelectors(): Promise<Array<ISelector>> {
-        return null;
+        return new Promise<Array<ISelector>>((reject, resolve) => {
+            let data = [
+                {
+                    label: "Title",
+                    query: "title"
+                },
+                {
+                    label: "Locations",
+                    query: "locations"
+                },
+                {
+                    label: "Writer",
+                    query: "writer"
+                },
+                {
+                    label: "Director",
+                    query: "director"
+                },
+                {
+                    label: "Production Company",
+                    query: "production_company"
+                }
+            ]
+
+
+        })
     }
 
 

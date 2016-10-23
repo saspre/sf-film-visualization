@@ -22,4 +22,12 @@ The following is a list of dependencies and why they are included:
 -Should use api token 
 -Should be responsive
 -Missing dependency injection
-- Drop babel og tilføj lib: es6
+-Translations
+-Split bundle.js into app.js and vendor.js 
+-Add cache busting
+
+- Better Queries: can use all selectors
+- Views around the SVG (menu)
+- View All movies in selection ?
+- Improved colors
+- Finishing

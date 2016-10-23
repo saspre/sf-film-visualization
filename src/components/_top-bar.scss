@@ -1,0 +1,18 @@
+
+@import '../styles/colors';
+
+.top-bar {
+    background-color: $uber-black;
+    height: 80px;
+    color: $raw-white;
+    display: flex; 
+    align-items: center;
+    padding-left: 48px;
+    //    justify-content: center;
+    p {
+        //vertical-align: middle;
+        padding-left: 16px;
+        margin: 0;
+    }
+}
+
