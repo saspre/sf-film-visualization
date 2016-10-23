@@ -22,6 +22,7 @@ export class NodeHierarchyElementOption {
      * Defines the minimumValue to be drawn
      */
     minimumValue?: number;  
+    ignoreMinimumBelow?: number;
 }
 
 /**
@@ -58,6 +59,9 @@ export class NodeHierarchyElement extends BaseElement {
     public get minimumValue() {
         return this._config.minimumValue || 0;
     }
+     public get ignoreMinimumBelow() {
+        return this._config.ignoreMinimumBelow || 20;
+    }
 
     public get colorScheme(): d3.scale.Ordinal<string, string> {
         if(!this._colorScheme) {
@@ -75,6 +79,7 @@ export class NodeHierarchyElement extends BaseElement {
         if(this._data) {
             this.clean();
         }
+      
         this._data = data;
         this.redraw();
     }
@@ -83,13 +88,15 @@ export class NodeHierarchyElement extends BaseElement {
         this.svg.selectAll(".node") .remove();
     }
 
-    public redraw() {
+    public redraw = () => {
         const translateNodeToBorder = translateToBorderFactory(this.width, this.height);
        
-        const data = this._data.filter((d) => d.value >= this.minimumValue && d.name)
+       
+        let minimumValue = this._data.length < this._config.ignoreMinimumBelow ? 0 : this._config.minimumValue;
         
-
-         const pack = d3.layout.pack<Node>()
+        const data = this._data.filter((d) => d.value >= minimumValue && d.name)
+          
+        const pack = d3.layout.pack<Node>()
                 .sort((a,b)=> {
                     return  - a.name.length - b.name.length
                     // var threshold = 10;
@@ -128,9 +135,9 @@ export class NodeHierarchyElement extends BaseElement {
 
 
         nodesSelection.transition()
-            .duration(2000)
+            .duration(1800)
             .ease("cubic-in-out")
-            .delay((d, i) => i * 20 * Math.random())
+            .delay((d, i) =>  800 * Math.random()) 
             .attr("transform", (d) => { 
                 return `translate(${d.x}, ${d.y})`; 
             });

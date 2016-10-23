@@ -10,6 +10,9 @@
 export const shortenToWithinRadius = (radius: number, text: string): string => {
         var maxWidth = radius / 3.1;
         var lines = radius / 10;
+        if(!text) {
+            return "";
+        }
         text = text.split(/\s+/g).map((s) => {
             if(s.length >= maxWidth) {
                 const margin = 2;

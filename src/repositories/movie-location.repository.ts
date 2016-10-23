@@ -1,26 +1,17 @@
 
 import  'whatwg-fetch';
-import { IGroup, ISelector, ISelectorHierarchy } from '../model'
+import { IGroup, ISelector, ISelectorHierarchy, IGroupRepository } from '../model'
 import * as logManager from 'loglevel'
 import { groupMapperFactory } from '../utils' 
 let log = logManager.getLogger("movie-location-repo");
 import * as $ from 'jquery'
 
-/**
- * The IFilmLocationRepository is used to fetch the information 
- * The idea is to create an abstraction between the data, as it can have several origins
- *  */
-export interface IFilmLocationRepository {
-
-    getGroups(primary: ISelector, secondary: ISelector): Promise<Array<IGroup>>;
-    getSelectors(): Promise<Array<ISelector>>;
-}
 
 /**  
  * The InMemoryFilmLocation repository fetches the entire data set up front and stores it in memory. 
  * For smaller data sets this is sufficient, but for larger it is not
  */
-export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
+export class SodaFilmLocatioRepository implements  IGroupRepository {
 
     private headers = new Headers();
     private url = 'https://data.sfgov.org/resource/wwmu-gmzc.json'
@@ -37,7 +28,7 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
         // that production company has used that writer not based on number of films 
         if(primary.query !== "locations" && secondary.query !== "locations") 
         {
-           // return this.getAvancedGroups(primary, secondary, mapper);
+            return this.getAvancedGroups(primary, secondary);
         }
 
         return this.fetch(`${this.url}?$group=${primary.query}&$select=${primary.query},COUNT(${secondary.query})`)           
@@ -45,7 +36,8 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
     }
 
     
-    private getAvancedGroups(primary: ISelector, secondary:ISelector, mapper: (d: any)=> Array<IGroup>): Promise<Array<IGroup>>  {
+    private getAvancedGroups(primary: ISelector, secondary:ISelector): Promise<Array<IGroup>>  {
+        const mapper = groupMapperFactory(primary.query, "count");
 
         let query = `SELECT ${primary.query}, count(*) 
                      GROUP BY ${secondary.query}, ${primary.query} |>
@@ -53,7 +45,7 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
                             GROUP BY ${primary.query}`
         
 
-        return this.fetch(`${this.url}?$query${query}`)
+        return this.fetch(`${this.url}?$query=${query}`)
             .then(mapper);
     }
 

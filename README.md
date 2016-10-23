@@ -1,12 +1,22 @@
 
 
 # SF Film and Localization 
-The project is created as a demo of one way of representing data. The bubble chart presentation is not the most precise way of representing size differences, but it does have its merits. 
+The project is created as a demo of one way of representing data. 
+The bubble chart presentation is not the most precise way of representing size differences, but it does have its merits. 
 
 ## Code Structure 
 The app consists of several components that can exist by themselves. The primary is the Visualization component. 
-It is configurable and can exist more or less indepent from the others. It only depends on an implementation of the ISelectorManager interface. 
-The repository layer is added to ensure that the data provider can be switched with minimum effort. 
+
+
+### Visualization Component 
+It is configurable and can exist more or less indepent from the others. It only depends on two interfaces, namely the ISelectorManager interface and the IGroupRepository. 
+
+
+### Repository
+The repository is built 
+
+### Other components 
+The other components merely acts as demonstration for the visualization components and helps providing control to it. 
 
 
 ## Dependencies 
