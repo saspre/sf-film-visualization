@@ -22,9 +22,8 @@ module.exports = {
     loaders: [
       { 
         test: /\.ts$/, 
-        loader: 'ts-loader', //babel-loader!
+        loader: 'ts-loader', 
         exclude: '/node_modules',
-       
       },
        {
         test: /\.scss$/,
@@ -47,12 +46,6 @@ module.exports = {
 			},
     ]
   },
-  sassLoader: {
-		includePaths: [
-			'./src/styles',
-			'./src/components/**/*.scss'
-		]
-	},
   plugins: [
 		new CleanWebpackPlugin(['dist'], { verbose: true }),
     new webpack.SourceMapDevToolPlugin({
