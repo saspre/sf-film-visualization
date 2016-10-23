@@ -54,8 +54,7 @@ export class Visualizer {
      draw() {
       
         this._repository.getSelectors().then((selectors) => {
-             this._manager.setPrimarySelectors(selectors, startPrimaryLabel);
-             this._manager.setSecondarySelectors(selectors, startSecondaryLabel);
+             this._manager.setSelectors(selectors);
         })
 
        

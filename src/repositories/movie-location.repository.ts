@@ -1,10 +1,10 @@
 
 import  'whatwg-fetch';
-import { IGroup, ISelector } from '../model'
+import { IGroup, ISelector, ISelectorHierarchy } from '../model'
 import * as logManager from 'loglevel'
 import { groupMapperFactory } from '../utils' 
 let log = logManager.getLogger("movie-location-repo");
-
+import * as $ from 'jquery'
 
 export interface IFilm {
     title: string;
@@ -80,29 +80,37 @@ export class SodaFilmLocatioRepository implements  IFilmLocationRepository {
      * Gets the possible selectors. 
      * These are hardcoded for now, but should preferably be fetched from the API
      */
-    getSelectors(): Promise<Array<ISelector>> {
-        return new Promise<Array<ISelector>>((resolve, reject) => {
-            let data = [
-                {
+    getSelectors(): Promise<Array<ISelectorHierarchy>> {
+        const titleSelector = {
                     label: "Title",
                     query: "title"
-                },
-                {
+                };
+        const locationsSelector = {
                     label: "Locations",
                     query: "locations"
-                },
-                {
+                };
+        const writerSelector = {
                     label: "Writer",
                     query: "writer"
-                },
-                {
+                };
+        const directorSelector = {
                     label: "Director",
                     query: "director"
-                },
-                {
+                };
+        const productionCompany = {
                     label: "Production Company",
                     query: "production_company"
                 }
+        
+
+        return new Promise<Array<ISelectorHierarchy>>((resolve, reject) => {
+            let data = [
+                $.extend(titleSelector,     { children: [ locationsSelector  ]}),
+                $.extend(locationsSelector, { children: [ titleSelector   ]}),
+                $.extend(writerSelector,    { children: [ titleSelector, locationsSelector, directorSelector, productionCompany  ]}),
+                $.extend(directorSelector,  { children: [ titleSelector, locationsSelector, writerSelector, productionCompany  ]}),
+                $.extend(productionCompany, { children: [ titleSelector, locationsSelector, writerSelector, directorSelector  ]}),
+
             ]
           
             resolve(data);

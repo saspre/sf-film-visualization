@@ -5,4 +5,8 @@ interface ISelector {
     query: string;
 }
 
-export { ISelector }
+interface ISelectorHierarchy extends ISelector {
+    children: Array<ISelector>
+}
+
+export { ISelector, ISelectorHierarchy }
