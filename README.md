@@ -54,9 +54,10 @@ npm run build
  - Translations
  - Split bundle.js into app.js and vendor.js 
  - Add cache busting
+ - Allow user to configure minimumValues. (Currently the minimum value is configured to 2)
 
 ### What would be cool to add?
- - Circles should be clicable and shold present info
+ - Circles should be clickable and shold present info. 
  - Add framework support 
 
 
