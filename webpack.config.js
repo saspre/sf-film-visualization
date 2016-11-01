@@ -36,14 +36,14 @@ module.exports = {
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         loader: 'file?name=fonts/[name].[ext]'
-       },
-       	{
-				test: /\.handlebars$/,
-				loader: 'handlebars-loader',
-				query: {
-					partialDirs: [path.resolve(__dirname, 'src', 'components')].concat(glob.sync('**/', { cwd: path.resolve(__dirname, 'src', 'components'), realpath: true }))
-				}
-			},
+      },
+      {
+	test: /\.handlebars$/,
+	loader: 'handlebars-loader',
+	query: {
+	  partialDirs: [path.resolve(__dirname, 'src', 'components')].concat(glob.sync('**/', { cwd: path.resolve(__dirname, 'src', 'components'), realpath: true }))
+	}
+      },
     ]
   },
   plugins: [
