@@ -1,0 +1,24 @@
+
+<div class="title">
+    <img src="assets/filter.png" />
+    <h1>Filter</h1>
+</div>
+
+
+<div class="primary-selectors selectors">
+    <h2>Primary Selector</h2>
+    <app-selector-list 
+    [selectors]="primarySelectors$ | async" 
+    [selected]="(selected$ | async).primary" 
+    category="primary-selector"
+    (onSelected)="onPrimarySelected($event)"></app-selector-list>
+</div>
+
+<div class="secondary-selectors selectors">
+    <h2>Secondary Selector</h2>
+    <app-selector-list 
+    [selectors]="secondarySelectors$ | async"  
+    [selected]="(selected$ | async).secondary" 
+    category="secondary-selector"
+    (onSelected)="onSecondarySelected($event)"></app-selector-list>
+</div>    

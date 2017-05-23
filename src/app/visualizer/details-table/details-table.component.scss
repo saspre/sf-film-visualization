@@ -1,0 +1,18 @@
+@import '~app/styles/_index.scss';
+
+:host {
+    padding:  0 20px;
+    display: block;
+    table {
+        margin: auto;
+        margin-top: 60px;
+        border-spacing: 10px 2px;
+        font-size: 0.7em; 
+    }
+
+    th {
+        font-weight: bold;
+        text-align: left;
+    }
+
+}

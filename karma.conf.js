@@ -1,27 +1,44 @@
-var webpack = require('webpack');
-var webpackConfig = require('./webpack.config');
+// Karma configuration file, see link for more information
+// https://karma-runner.github.io/0.13/config/configuration-file.html
 
 module.exports = function (config) {
-    config.set({
-        browsers: ['Chrome'], //run in Chrome
-        singleRun: true, //just run once by default
-        frameworks: ['mocha'], //use the mocha test framework
-        files: [
-            'src/**/*-test.ts' //just load this file
-        ],
-        preprocessors: {
-            'src/**/*.ts': ['webpack', 'sourcemap'] //preprocess with webpack and our sourcemap loader
-        },
-        reporters: ['dots'], //report results in this format
-        webpack: { //kind of a copy of your webpack config
-            devtool: 'inline-source-map', //just do inline source maps instead of the default
-            module: webpackConfig.module,
-            resolve: webpackConfig.resolve,
-            plugins: webpackConfig.plugins
-        },
-        webpackServer: {
-            noInfo: true //please don't spam the console when running in karma!
-        },
-    
-    });
+  config.set({
+    basePath: '',
+    frameworks: ['jasmine', '@angular/cli'],
+    plugins: [
+      require('karma-jasmine'),
+      require('karma-chrome-launcher'),
+      require('karma-jasmine-html-reporter'),
+      require('karma-coverage-istanbul-reporter'),
+      require('@angular/cli/plugins/karma')
+    ],
+    client:{
+      clearContext: false // leave Jasmine Spec Runner output visible in browser
+    },
+    files: [
+      { pattern: './src/test.ts', watched: false }
+    ],
+    preprocessors: {
+      './src/test.ts': ['@angular/cli']
+    },
+    mime: {
+      'text/x-typescript': ['ts','tsx']
+    },
+    coverageIstanbulReporter: {
+      reports: [ 'html', 'lcovonly' ],
+      fixWebpackSourcePaths: true
+    },
+    angularCli: {
+      environment: 'dev'
+    },
+    reporters: config.angularCli && config.angularCli.codeCoverage
+              ? ['progress', 'coverage-istanbul']
+              : ['progress', 'kjhtml'],
+    port: 9876,
+    colors: true,
+    logLevel: config.LOG_INFO,
+    autoWatch: true,
+    browsers: ['Chrome'],
+    singleRun: false
+  });
 };

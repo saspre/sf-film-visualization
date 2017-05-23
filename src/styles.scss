@@ -1,12 +1,50 @@
+/* You can add global styles to this file, and also import other style files */
 
 @import '~normalize-scss/sass/normalize';
 
 @include normalize();
 
-@import 'styles/colors';
-@import 'styles/base';
+p, label, h1, h2, a, span, th, td {
+    font-family: 'Sansumi-Regular'
+}
 
-@import 'components/visualizer/visualizer';
-@import 'components/top-bar/top-bar';
-@import 'components/menu/menu';
+body, html {
+    min-height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    
+}
 
+body {
+    overflow: hidden;
+    &::-webkit-scrollbar { 
+        display: none; 
+    }
+}
+
+
+app-root {
+    flex-direction: column;
+    display: flex;    
+    min-height: 100%;
+    width: 100%;
+}
+
+label {
+    font-size: 12px;
+}
+
+h1 { 
+    font-size: 18px;
+}
+
+h2 {
+    font-size: 16px;
+}
+
+
+* {
+    box-sizing: border-box;
+}

@@ -1,0 +1,21 @@
+
+
+@mixin round-button() {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: none;
+    outline: none;
+    background-color: rgba(0,0,0,0.2);
+    color: white;
+
+    display: flex; 
+    justify-content: center;
+    align-content: center;
+
+
+    &:hover {
+        background-color: rgba(0,0,0,0.5);   
+    }
+
+}

@@ -1,0 +1,17 @@
+@import '~app/styles/_index.scss';
+
+:host {
+    height: 100%;
+}
+
+.content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    @include respond-to(large) {
+        flex-direction: row;
+        height: 100%;
+    }
+}
