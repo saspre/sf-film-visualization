@@ -1,6 +1,0 @@
-
-<button *ngIf="details.length > 0" (click)="onDetailsExited()" class="back"></button>
-<button class="fullscreen" *ngIf="!isFullscreen" (click)="fullscreenClicked()"></button>
-<button class="exit" *ngIf="isFullscreen" (click)="exitFullscreenClicked()"></button>
-<app-details-table *ngIf="details.length > 0" [rows]="details"></app-details-table>
-<app-ui-message></app-ui-message>
